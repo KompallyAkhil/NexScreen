@@ -35,5 +35,6 @@ def extract_text_from_pdf(pdf_path: str) -> str:
             f"No extractable text found in '{pdf_path}'. "
             "The PDF may be image-only — consider adding OCR support."
         )
+    # print("\n\n".join(pages))
 
     return "\n\n".join(pages)

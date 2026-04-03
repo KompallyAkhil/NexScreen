@@ -5,23 +5,6 @@ Usage:
     python run.py --resume path/to/resume.pdf --jd path/to/jd.pdf
     python run.py --resume resume.pdf --jd jd.pdf --output result.json
 """
-# ── Torch meta-tensor compatibility patch ─────────────────────────────────────
-# torch 2.x + transformers 4.5x use meta-tensor lazy init by default.
-# Calling .to(device) on a meta tensor raises NotImplementedError.
-# This patch falls back to .to_empty(device) which is the correct modern API.
-import torch as _torch
-_orig_module_to = _torch.nn.Module.to
-
-def _safe_module_to(self, *args, **kwargs):
-    try:
-        return _orig_module_to(self, *args, **kwargs)
-    except NotImplementedError:
-        device = args[0] if args else kwargs.get("device", "cpu")
-        return _orig_module_to(self.to_empty(device=str(device)), *args, **kwargs)
-
-_torch.nn.Module.to = _safe_module_to
-# ──────────────────────────────────────────────────────────────────────────────
-
 from __future__ import annotations
 import argparse
 import json

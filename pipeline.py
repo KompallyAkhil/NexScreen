@@ -74,7 +74,7 @@ def build_pipeline() -> StateGraph:
     graph.add_edge("llm_judge",              "aggregate_score")
     graph.add_edge("aggregate_score",        END)
 
-    print(graph.compile())
+    # print(graph.compile())
 
     return graph.compile()
 
