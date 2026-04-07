@@ -1,0 +1,14 @@
+# Dockerignore: Prevent unnecessary files from being copied to the image
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+.env
+.git/
+.gitignore
+*.pdf
+result.json
+Dockerfile
+.dockerignore
