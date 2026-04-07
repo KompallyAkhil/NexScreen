@@ -1,84 +1,177 @@
-# NexScreen: AI-Powered Resume Screening
+# Resume ↔ JD Scorer
 
-NexScreen is a full-stack, production-ready resume scoring platform that uses semantic AI to calibrate candidate resumes against job descriptions instantly. 
-
-Built with **Next.js**, **FastAPI**, **LangGraph**, and **Groq (Llama)**, NexScreen breaks down candidate suitability by analyzing semantic meaning, keyword overlap, and holistic fit—presenting everything in a sleek, glassmorphic UI.
-
----
-
-## 🚀 Features
-- **Semantic Understanding**: Move beyond exact keyword matches. The AI extracts the true context behind every bullet point.
-- **Precision Scoring**: A multi-faceted calibration dial powered by a configurable matrix of semantic similarity and holistic LLM assessment.
-- **Actionable Insights**: Instant feedback detailing matched competencies, identified gaps, and granular scoring breakdowns.
-- **Sleek UI Dashboard**: A premium, animated frontend (Framer Motion + Tailwind CSS v4) mapping the entire LangGraph AI pipeline securely.
+A production-quality resume scoring pipeline built with **LangGraph**, **LangChain**, and **Groq (Llama)**.  
+Traces every step automatically in **LangSmith**.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
-NexScreen is divided into a robust microservice architecture:
-
-| Component | Technology | Description |
-|-----------|-----------|-------------|
-| **Frontend** | Next.js (App Router), Tailwind V4, Framer Motion | The beautiful orchestration layer for analysts to upload resumes and process analytics. |
-| **Backend** | Python, FastAPI, LangGraph, SentenceTransformers | A high-performance inference engine combining deterministic ML embeddings and LLMs. |
-
----
-
-## 🛠️ Quickstart (Docker Recommended)
-
-The easiest way to run both the Frontend and the Backend seamlessly is via Docker.
-
-### 1. Configure the AI Keys
-Create an environment file for the backend and set your Groq API keys:
-```bash
-cp backend/.env.example backend/.env
 ```
-Ensure your `backend/.env` has:
-- `GROQ_API_KEY`: Fetch from [Groq Console](https://console.groq.com/keys)
-
-### 2. Boot the Pipeline
-From the root of the project, run:
-```bash
-docker compose up --build
+[PDF Resume] ──► parse ──► extract fields ──► embed ──┐
+                                                        ├──► semantic match ──► LLM judge ──► score
+[PDF JD]     ──► parse ──► extract fields ──► embed ──┘
 ```
-*Docker will build the lightweight Alpine Node.js frontend and the Python 3.11 backend simultaneously, linking their networks.*
 
-### 3. Open the UI
-Navigate to **[http://localhost:3000](http://localhost:3000)** in your browser to access the NexScreen dashboard.
+Two parallel branches process the resume and JD independently,  
+then converge at the semantic matching node.
+
+**Score = 45% semantic similarity + 35% LLM judge + 20% keyword overlap**  
+(Weights configurable in `.env`)
 
 ---
 
-## 💻 Manual Local Development
+## Setup
 
-If you prefer to run the components independently without Docker, follow these instructions:
+### 1. Clone / copy the project
 
-### Backend (FastAPI)
 ```bash
-cd backend
+cd resume_jd_scorer
+```
+
+### 2. Create a virtual environment
+
+```bash
 python -m venv .venv
-source .venv/bin/activate       # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn run:app --reload
-# Runs on localhost:8000
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 ```
-*(You can also use the backend purely via CLI: `python run.py --resume path.pdf --jd path.pdf`)*
 
-### Frontend (Next.js)
+### 3. Install dependencies
+
 ```bash
-cd frontend
-npm install
-npm run dev
-# Runs on localhost:3000
+pip install -r requirements.txt
+```
+
+### 4. Configure API keys
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and fill in:
+
+| Variable            | Where to get it                    |
+| ------------------- | ---------------------------------- |
+| `GROQ_API_KEY`      | https://console.groq.com/keys      |
+| `LANGCHAIN_API_KEY` | https://smith.langchain.com (free) |
+
+LangSmith is optional but **highly recommended** — it traces every node so you can debug prompts visually.
+
+---
+
+## Usage
+
+```bash
+# Basic run
+python run.py --resume path/to/resume.pdf --jd path/to/jd.pdf
+
+# Save output to JSON
+python run.py --resume resume.pdf --jd jd.pdf --output result.json
+```
+
+### Example output
+
+```json
+{
+  "final_score": 78.4,
+  "band": "Strong fit",
+  "components": {
+    "semantic_similarity": {
+      "score": 81.2,
+      "weight": 0.45,
+      "contribution": 36.5
+    },
+    "llm_holistic_judge": {
+      "score": 74.0,
+      "weight": 0.35,
+      "contribution": 25.9
+    },
+    "keyword_overlap": { "score": 80.3, "weight": 0.2, "contribution": 16.1 }
+  },
+  "skill_analysis": {
+    "matched_skills": ["Python", "FastAPI", "PostgreSQL", "Docker"],
+    "missing_skills": ["Kubernetes", "Terraform"],
+    "match_rate": "66.7%"
+  },
+  "llm_assessment": {
+    "reasoning": "Strong backend Python background with 4 years experience...",
+    "strengths": [
+      "Solid Python/FastAPI experience",
+      "PostgreSQL expertise",
+      "System design skills"
+    ],
+    "concerns": ["No Kubernetes experience", "Limited DevOps background"]
+  },
+  "suggestions": [
+    "Add a Kubernetes side project or certification to address the main gap",
+    "Highlight any cloud deployment work even if informal",
+    "Quantify impact in current role descriptions"
+  ]
+}
 ```
 
 ---
 
-## ⚙️ Scoring Algorithm config (`backend/.env`)
+## Project structure
 
-The final matching score is mathematically aggregated. By default, it uses:
-- **45% Semantic Similarity** (Cosine distance of chunk embeddings)
-- **35% LLM Judge** (Holistic, cognitive reasoning of fit)
-- **20% Keyword Overlap** (Jaccard similarity on hard skills)
+```
+resume_jd_scorer/
+├── config.py                  # All config from .env, zero hardcoded values
+├── state.py                   # LangGraph TypedDict state
+├── pipeline.py                # StateGraph definition and compilation
+├── run.py                     # CLI entry point
+├── requirements.txt
+├── .env.example
+├── nodes/
+│   ├── parse_node.py          # PDF text extraction (PyMuPDF)
+│   ├── extract_node.py        # LLM structured field extraction
+│   ├── embed_node.py          # SentenceTransformer embeddings
+│   ├── semantic_score_node.py # Cosine similarity + keyword overlap
+│   ├── llm_judge_node.py      # Groq LLM holistic fit judge
+│   └── score_node.py          # Weighted score aggregation
+└── utils/
+    ├── pdf_parser.py          # PyMuPDF wrapper
+    └── keyword_scorer.py      # Jaccard keyword overlap
+```
 
-You can tune this at any time by editing the weights in `backend/.env`!
+---
+
+## Tuning scores
+
+Edit `.env` to adjust weights (must sum to 1.0):
+
+```env
+SEMANTIC_WEIGHT=0.45
+LLM_WEIGHT=0.35
+KEYWORD_WEIGHT=0.20
+```
+
+Change the Groq model:
+
+```env
+GROQ_MODEL=llama-3.3-70b-versatile  # higher quality, slower
+GROQ_MODEL=llama-3.1-8b-instant     # default — fast and cheap
+```
+
+---
+
+## LangSmith tracing
+
+When `LANGCHAIN_TRACING_V2=true` and `LANGCHAIN_API_KEY` are set,  
+every pipeline run appears at https://smith.langchain.com with:
+
+- Full input/output per node
+- Token usage and latency per LLM call
+- Error traces with full stack
+
+---
+
+## Extending the pipeline
+
+| What to add                    | Where                                   |
+| ------------------------------ | --------------------------------------- |
+| ATS keyword boost scoring      | `nodes/semantic_score_node.py`          |
+| Cover letter generation        | New node after `aggregate_score`        |
+| Role-specific rubrics          | `nodes/llm_judge_node.py` prompt        |
+| Batch scoring multiple resumes | `run.py` loop over `pipeline.invoke`    |
+| FastAPI endpoint               | New `api.py` wrapping `pipeline.invoke` |
