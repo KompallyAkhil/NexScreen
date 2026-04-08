@@ -1,78 +1,102 @@
 @import "tailwindcss";
 
+/* ───── DARK THEME (default) ───── */
 :root {
-  --background: #09090b; /* zinc-950 */
-  --foreground: #fafafa; /* zinc-50 */
-  --card: #09090b;
-  --card-foreground: #fafafa;
-  --popover: #09090b;
-  --popover-foreground: #fafafa;
-  --primary: #4f46e5; /* indigo-600 */
-  --primary-foreground: #eef2ff;
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272a;
-  --accent-foreground: #fafafa;
-  --destructive: #7f1d1d;
-  --destructive-foreground: #fafafa;
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #4f46e5;
-  --radius: 1rem;
+  --background: #0f1117;
+  --foreground: #f1f5f9;
+  --surface: #1a1d27;
+  --surface-raised: #21253a;
+  --border: #2a2f45;
+  --border-subtle: #1e2235;
+  --muted: #8b92a9;
+  --muted-light: #5a6378;
+  --accent: #4f8ef7;
+  --accent-light: rgba(79, 142, 247, 0.12);
+  --accent-muted: rgba(79, 142, 247, 0.22);
+  --success: #34d399;
+  --success-light: rgba(52, 211, 153, 0.12);
+  --success-muted: rgba(52, 211, 153, 0.22);
+  --warning: #fbbf24;
+  --warning-light: rgba(251, 191, 36, 0.12);
+  --danger: #f87171;
+  --danger-light: rgba(248, 113, 113, 0.12);
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1rem;
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 24px 0 rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* ───── LIGHT THEME ───── */
+[data-theme="light"] {
+  --background: #f8f9fa;
+  --foreground: #111827;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --border: #e5e7eb;
+  --border-subtle: #f3f4f6;
+  --muted: #6b7280;
+  --muted-light: #9ca3af;
+  --accent: #2563eb;
+  --accent-light: #eff6ff;
+  --accent-muted: #dbeafe;
+  --success: #16a34a;
+  --success-light: #f0fdf4;
+  --success-muted: #dcfce7;
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
+  color-scheme: light;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-border: var(--border);
-  --font-sans: var(--font-geist-sans), "Inter", sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-sans: "Inter", system-ui, sans-serif;
 }
 
 @layer base {
   * {
-    @apply border-border;
+    box-sizing: border-box;
   }
   body {
-    @apply bg-background text-foreground tracking-tight;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Inter", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 }
 
-/* Premium Glassmorphism */
-.glass {
-  @apply bg-white/[0.02] backdrop-blur-3xl border border-white/[0.05] shadow-[0_8px_32px_0_rgba(0,0,0,0.5)];
-}
-
-.glass-hover {
-  @apply hover:bg-white/[0.04] hover:border-white/[0.1] hover:shadow-[0_8px_40px_0_rgba(0,0,0,0.6)] transition-all duration-500;
-}
-
-/* Shimmer Animation for the Results Assessment Card */
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%) skewX(-12deg);
-  }
-}
-.animate-shimmer {
-  animation: shimmer 2s infinite linear;
+/* Card utilities */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border);
   border-radius: 20px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--muted-light);
 }

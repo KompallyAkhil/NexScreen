@@ -2,8 +2,6 @@
 
 import { Info, TrendingUp, TrendingDown } from "lucide-react";
 import { motion } from "framer-motion";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
 
 export function InsightCard({
   title,
@@ -18,16 +16,16 @@ export function InsightCard({
 }) {
   const configs = {
     strength: {
-      icon: <TrendingUp className="text-emerald-400" size={22} />,
-      gradient: "from-emerald-500/10",
+      icon: <TrendingUp size={16} style={{ color: "var(--success)" }} />,
+      iconBg: "var(--success-light)",
     },
     concern: {
-      icon: <TrendingDown className="text-rose-400" size={22} />,
-      gradient: "from-rose-500/10",
+      icon: <TrendingDown size={16} style={{ color: "var(--danger)" }} />,
+      iconBg: "var(--danger-light)",
     },
     info: {
-      icon: <Info className="text-indigo-400" size={22} />,
-      gradient: "from-indigo-500/10",
+      icon: <Info size={16} style={{ color: "var(--accent)" }} />,
+      iconBg: "var(--accent-light)",
     },
   };
 
@@ -35,33 +33,42 @@ export function InsightCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
-      className={twMerge(
-        "p-6 rounded-3xl glass backdrop-blur-xl relative overflow-hidden group hover:border-white/20 transition-all duration-500",
-        `bg-linear-to-br ${config.gradient} to-transparent`,
-      )}
+      transition={{ delay, duration: 0.4 }}
+      className="p-6 rounded-xl"
+      style={{
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
+        boxShadow: "var(--shadow-sm)",
+      }}
     >
-      {/* Glossy sheen overlay */}
-      <div className="absolute inset-0 bg-linear-to-b from-white/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-      <div className="flex items-center gap-3 mb-5 relative z-10">
-        <div className="p-2 rounded-xl bg-black/40 backdrop-blur-md shadow-inner border border-white/5">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div
+          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+          style={{ background: config.iconBg }}
+        >
           {config.icon}
         </div>
-        <h3 className="font-bold text-lg tracking-tight text-white/90">
+        <h3
+          className="text-sm font-semibold"
+          style={{ color: "var(--foreground)" }}
+        >
           {title}
         </h3>
       </div>
 
-      <ul className="space-y-4 relative z-10">
+      <ul className="space-y-2.5">
         {items.map((item, i) => (
           <li
             key={i}
-            className="flex gap-4 text-sm text-zinc-300/90 leading-relaxed items-start"
+            className="flex gap-3 text-sm leading-relaxed"
+            style={{ color: "var(--muted)" }}
           >
-            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-white/30 shrink-0 shadow-[0_0_5px_rgba(255,255,255,0.5)]" />
+            <span
+              className="mt-2 h-1 w-1 rounded-full shrink-0"
+              style={{ background: "var(--border)" }}
+            />
             <span>{item}</span>
           </li>
         ))}

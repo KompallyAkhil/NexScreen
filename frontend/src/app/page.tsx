@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { SetupView } from "@/features/analysis/components/SetupView";
@@ -20,10 +21,13 @@ export default function Home() {
   } = useAnalysis();
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 flex flex-col font-sans selection:bg-indigo-500/30 overflow-x-hidden">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ background: "var(--background)", color: "var(--foreground)" }}
+    >
       <Navbar />
 
-      <main className="flex-1 w-full px-6 py-32 relative z-10">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-6 pt-28 pb-16">
         <AnimatePresence mode="wait">
           {!results ? (
             <SetupView
@@ -41,19 +45,6 @@ export default function Home() {
           )}
         </AnimatePresence>
       </main>
-
-      {/* Global Background Decor */}
-      <div className="fixed top-[-20%] right-[-10%] w-[70vw] h-[70vw] bg-indigo-900/10 blur-[150px] rounded-full -z-10 pointer-events-none" />
-      <div className="fixed bottom-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-violet-900/10 blur-[150px] rounded-full -z-10 pointer-events-none" />
-
-      {/* Subtle Grain Overlay */}
-      <div
-        className="fixed inset-0 opacity-[0.03] pointer-events-none -z-10"
-        style={{
-          backgroundImage:
-            'url("data:image/svg+xml,%3Csvg viewBox=%220 0 1024 1024%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
-        }}
-      />
     </div>
   );
 }

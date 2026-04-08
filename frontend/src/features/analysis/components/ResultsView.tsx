@@ -17,45 +17,73 @@ export function ResultsView({
   return (
     <motion.div
       key="results"
-      initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
-      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-      exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-12 max-w-7xl mx-auto"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="space-y-6 max-w-6xl mx-auto"
     >
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8 group relative z-10">
-        <div className="relative">
-          <div className="absolute -left-10 top-1/2 -translate-y-1/2 w-32 h-32 bg-indigo-500/20 blur-[60px] -z-10 rounded-full" />
-          <h2 className="text-4xl font-black text-white tracking-tighter mb-2">
-            Calibration Report
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2
+            className="text-2xl font-bold tracking-tight"
+            style={{ color: "var(--foreground)" }}
+          >
+            Analysis Report
           </h2>
-          <p className="text-zinc-400 text-sm font-bold tracking-widest uppercase">
-            Generated on {new Date().toLocaleDateString()}
+          <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>
+            Generated on {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
           </p>
         </div>
         <button
           onClick={reset}
-          className="flex items-center gap-3 px-6 py-3 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 text-sm font-bold hover:text-white hover:bg-zinc-800 hover:border-zinc-700 transition-all shadow-lg active:scale-95"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 active:scale-95"
+          style={{
+            background: "var(--surface)",
+            color: "var(--muted)",
+            border: "1px solid var(--border)",
+            boxShadow: "var(--shadow-sm)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "var(--foreground)";
+            e.currentTarget.style.borderColor = "#9ca3af";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "var(--muted)";
+            e.currentTarget.style.borderColor = "var(--border)";
+          }}
         >
-          <RefreshCw size={16} /> New Analysis
+          <RefreshCw size={14} />
+          New Analysis
         </button>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Visualizer Column */}
-        <div className="lg:col-span-1 space-y-8 flex flex-col items-center">
+      {/* Main Grid */}
+      <div className="grid lg:grid-cols-3 gap-5">
+        {/* Left column */}
+        <div className="lg:col-span-1 space-y-5">
           <ScoreGauge score={results.final_score} band={results.band} />
 
+          {/* Skill Matrix */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="w-full p-8 rounded-3xl glass backdrop-blur-xl space-y-6 relative border-t border-white/5"
+            className="p-5 rounded-xl"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              boxShadow: "var(--shadow-sm)",
+            }}
           >
-            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">
+            <p
+              className="text-xs font-semibold uppercase tracking-wider mb-4"
+              style={{ color: "var(--muted)" }}
+            >
               Skill Matrix
-            </h3>
-            <div className="flex flex-wrap gap-2.5">
+            </p>
+            <div className="flex flex-wrap gap-2">
               {results.skill_analysis?.matched_skills?.map((s: string) => (
                 <SkillBadge key={s} name={s} matched={true} />
               ))}
@@ -66,88 +94,119 @@ export function ResultsView({
           </motion.div>
         </div>
 
-        {/* Details Column */}
-        <div className="lg:col-span-2 grid md:grid-cols-2 gap-6">
+        {/* Right column */}
+        <div className="lg:col-span-2 space-y-5">
+          {/* Assessment */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="md:col-span-2 p-8 rounded-3xl glass backdrop-blur-xl bg-linear-to-br from-indigo-500/10 to-transparent border border-indigo-500/10 shadow-2xl relative overflow-hidden group"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="p-6 rounded-xl"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              boxShadow: "var(--shadow-sm)",
+            }}
           >
-            {/* Shimmer effect */}
-            <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-linear-to-r from-transparent to-white opacity-5 group-hover:animate-shimmer pointer-events-none" />
-            <h3 className="text-xl font-black text-white mb-4 tracking-tight">
-              Semantic Assessment
-            </h3>
-            <p className="text-zinc-300 leading-relaxed text-lg font-medium">
+            <div className="flex items-center gap-2 mb-3">
+              <div
+                className="w-1 h-4 rounded-full"
+                style={{ background: "var(--accent)" }}
+              />
+              <h3
+                className="text-sm font-semibold"
+                style={{ color: "var(--foreground)" }}
+              >
+                Semantic Assessment
+              </h3>
+            </div>
+            <p
+              className="text-sm leading-relaxed"
+              style={{ color: "var(--muted)" }}
+            >
               {results.llm_assessment?.reasoning}
             </p>
           </motion.div>
 
-          {/* <InsightCard 
-            title="Key Strengths" 
-            items={results.llm_assessment?.strengths || []} 
-            type="strength" 
-            delay={0.4}
+          {/* Suggestions */}
+          <InsightCard
+            title="Optimization Steps"
+            items={results.suggestions || []}
+            type="info"
+            delay={0.25}
           />
-          <InsightCard 
-            title="Identified Gaps" 
-            items={results.llm_assessment?.concerns || []} 
-            type="concern" 
-            delay={0.5}
-          /> */}
-          <div className="md:col-span-2">
-            <InsightCard
-              title="Optimization Steps"
-              items={results.suggestions || []}
-              type="info"
-              delay={0.6}
-            />
-          </div>
 
+          {/* Component Breakdown */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="col-span-full p-8 rounded-3xl glass border border-white/5 bg-black/20"
+            transition={{ delay: 0.35 }}
+            className="p-6 rounded-xl"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              boxShadow: "var(--shadow-sm)",
+            }}
           >
-            <h3 className="text-sm font-black text-zinc-400 uppercase tracking-[0.2em] mb-8">
+            <p
+              className="text-xs font-semibold uppercase tracking-wider mb-5"
+              style={{ color: "var(--muted)" }}
+            >
               Component Breakdown
-            </h3>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            </p>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-5">
               {Object.entries(results.components || {}).map(
                 ([key, value]: [string, any], index) => {
                   const score = Number(value?.score ?? 0);
                   const percentage = Math.max(0, Math.min(score, 100));
+                  const color =
+                    percentage >= 75
+                      ? "var(--success)"
+                      : percentage >= 50
+                        ? "var(--warning)"
+                        : "var(--danger)";
 
                   return (
-                    <div key={`${key}-${score}`} className="space-y-3">
-                      <p className="text-xs  text-zinc-500 uppercase font-black tracking-wider">
-                        {key.replace("_", " ")}
-                      </p>
-
-                      <p className="text-3xl font-black text-white tracking-tighter">
-                        {score}{" "}
-                        <span className="text-sm text-zinc-600 font-bold tracking-normal">
-                          / 100
-                        </span>
-                      </p>
-
-                      <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden shadow-inner">
+                    <div key={`${key}-${score}`} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p
+                          className="text-xs font-medium capitalize"
+                          style={{ color: "var(--muted)" }}
+                        >
+                          {key.replace(/_/g, " ")}
+                        </p>
+                        <p
+                          className="text-sm font-semibold"
+                          style={{ color: "var(--foreground)" }}
+                        >
+                          {score}
+                          <span
+                            className="text-xs font-normal ml-0.5"
+                            style={{ color: "var(--muted-light)" }}
+                          >
+                            /100
+                          </span>
+                        </p>
+                      </div>
+                      <div
+                        className="w-full h-1.5 rounded-full overflow-hidden"
+                        style={{ background: "var(--border-subtle)" }}
+                      >
                         <motion.div
                           initial={{ width: "0%" }}
                           animate={{ width: `${percentage}%` }}
                           transition={{
-                            duration: 1.5,
-                            delay: 0.8 + index * 0.1,
+                            duration: 1.2,
+                            delay: 0.4 + index * 0.08,
                             ease: [0.16, 1, 0.3, 1],
                           }}
-                          className="h-full bg-linear-to-r from-indigo-500 to-violet-500 rounded-full"
+                          className="h-full rounded-full"
+                          style={{ background: color }}
                         />
                       </div>
                     </div>
                   );
-                },
+                }
               )}
             </div>
           </motion.div>
