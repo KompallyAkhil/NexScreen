@@ -15,10 +15,16 @@ interface SetupViewProps {
 }
 
 export function SetupView({
-  resume, jd, setResume, setJd, loading, error, handleAnalyze
+  resume,
+  jd,
+  setResume,
+  setJd,
+  loading,
+  error,
+  handleAnalyze,
 }: SetupViewProps) {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
       animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
       exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
@@ -27,37 +33,33 @@ export function SetupView({
     >
       <div className="mb-16 relative">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-indigo-500/20 blur-[100px] rounded-full pointer-events-none -z-10" />
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
           className="text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-linear-to-b from-white via-white/80 to-white/30 leading-tight tracking-tighter mb-6"
         >
-          AI Resume Scoring <br /> <span className="text-indigo-400">& Semantic Analysis</span>
+          AI Resume Scoring <br />{" "}
+          <span className="text-indigo-400">& Semantic Analysis</span>
         </motion.h1>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
           className="text-zinc-400 text-lg md:text-xl font-medium max-w-3xl mx-auto leading-relaxed tracking-wide"
         >
-          Upload your resume and the job description to get a deep semantic compatibility score and actionable feedback.
+          Upload your resume and the job description to get a deep semantic
+          compatibility score and actionable feedback.
         </motion.p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 w-full mb-16 px-4">
-        <FileUpload 
-          label="1. UPLOAD RESUME" 
-          onFileSelect={setResume}
-        />
-        <FileUpload 
-          label="2. UPLOAD JOB DESCRIPTION" 
-          onFileSelect={setJd}
-        />
+        <FileUpload label="1. UPLOAD RESUME" onFileSelect={setResume} />
+        <FileUpload label="2. UPLOAD JOB DESCRIPTION" onFileSelect={setJd} />
       </div>
 
       {error && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm font-semibold tracking-wide backdrop-blur-md"
@@ -80,7 +82,10 @@ export function SetupView({
           ) : (
             <>
               Run Analysis
-              <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-300 text-indigo-600" />
+              <ArrowRight
+                size={24}
+                className="group-hover:translate-x-2 transition-transform duration-300 text-indigo-600"
+              />
             </>
           )}
         </span>

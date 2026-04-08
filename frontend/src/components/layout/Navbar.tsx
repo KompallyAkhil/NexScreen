@@ -23,13 +23,16 @@ export function Navbar() {
 
         {/* Links */}
         <div className="hidden md:flex items-center  gap-2">
-            <FileCode
-              size={16}
-              className="group-hover:text-indigo-400 transition-colors"
-            />{" "}
-            <Link href="https://github.com/KompallyAkhil/NexScreen" target="_blank">
-              Source
-            </Link>
+          <FileCode
+            size={16}
+            className="group-hover:text-indigo-400 transition-colors"
+          />{" "}
+          <Link
+            href="https://github.com/KompallyAkhil/NexScreen"
+            target="_blank"
+          >
+            Source
+          </Link>
         </div>
 
         {/* Action */}
