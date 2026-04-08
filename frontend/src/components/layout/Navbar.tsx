@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, MessageCircle, FileCode, Command } from "lucide-react";
-
+import Link from "next/link";
 export function Navbar() {
   return (
     <motion.nav
@@ -31,7 +31,9 @@ export function Navbar() {
               size={16}
               className="group-hover:text-indigo-400 transition-colors"
             />{" "}
-            Source
+            <Link href="https://github.com/KompallyAkhil/NexScreen" target="_blank">
+              Source
+            </Link>
           </a>
         </div>
 
