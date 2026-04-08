@@ -67,7 +67,7 @@ _RESUME_PROMPT = ChatPromptTemplate.from_messages([
     ("human",
         "Fields to extract:\n"
         "- name (string): Candidate full name, or 'Unknown'\n"
-        "- skills (array of strings): All technical and soft skills mentioned\n"
+        "- skills (array of strings): All technical and soft skills mentioned. CRITICAL: Extract as short, specific keywords (e.g. 'Java', 'SQL') rather than long phrases.\n"
         "- experience_years (number): Total years of explicit full-time post-graduation work experience. MUST be 0 if the resume implies the person is a student, or if experience solely consists of college projects.\n"
         "- education (array of strings): Degrees and institutions\n"
         "- job_titles (array of strings): Previous job titles held\n"
@@ -97,8 +97,8 @@ _JD_PROMPT = ChatPromptTemplate.from_messages([
     ("human",
         "Fields to extract:\n"
         "- title (string): Job title being hired for\n"
-        "- required_skills (array of strings): Must-have skills explicitly stated\n"
-        "- preferred_skills (array of strings): Nice-to-have or preferred skills\n"
+        "- required_skills (array of strings): Must-have skills explicitly stated. CRITICAL: Extract only short, specific tech keywords (e.g. 'Git', 'MongoDB', 'React'). Do NOT extract broad sentences like 'web fundamentals'. Break generic terms into specific keywords.\n"
+        "- preferred_skills (array of strings): Nice-to-have skills. Also extract only short, specific tech keywords.\n"
         "- experience_required (number): Minimum years of experience required, 0 if not stated\n"
         "- responsibilities (array of strings): Key responsibilities, max 8 items\n"
         "- seniority (string): One of intern/junior/mid/senior/lead/manager\n\n"

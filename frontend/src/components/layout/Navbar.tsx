@@ -22,11 +22,7 @@ export function Navbar() {
         </div>
 
         {/* Links */}
-        <div className="hidden md:flex items-center gap-8">
-          <a
-            href="#"
-            className="text-sm font-bold text-zinc-400 hover:text-white transition-colors flex items-center gap-2 tracking-wide group"
-          >
+        <div className="hidden md:flex items-center  gap-2">
             <FileCode
               size={16}
               className="group-hover:text-indigo-400 transition-colors"
@@ -34,7 +30,6 @@ export function Navbar() {
             <Link href="https://github.com/KompallyAkhil/NexScreen" target="_blank">
               Source
             </Link>
-          </a>
         </div>
 
         {/* Action */}
