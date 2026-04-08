@@ -84,11 +84,11 @@ export function ResultsView({
               Skill Matrix
             </p>
             <div className="flex flex-wrap gap-2">
-              {results.skill_analysis?.matched_skills?.map((s: string) => (
-                <SkillBadge key={s} name={s} matched={true} />
+              {Array.from(new Set(results.skill_analysis?.matched_skills || [])).map((s: string) => (
+                <SkillBadge key={`matched-${s}`} name={s} matched={true} />
               ))}
-              {results.skill_analysis?.missing_skills?.map((s: string) => (
-                <SkillBadge key={s} name={s} matched={false} />
+              {Array.from(new Set(results.skill_analysis?.missing_skills || [])).map((s: string) => (
+                <SkillBadge key={`missing-${s}`} name={s} matched={false} />
               ))}
             </div>
           </motion.div>
