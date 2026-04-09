@@ -1,9 +1,3 @@
-"""
-nodes/extract_node.py — Node 2 (runs twice in parallel branches).
-
-Uses Groq + structured output to extract typed fields from raw text.
-Each field is typed so downstream nodes never deal with raw strings unexpectedly.
-"""
 from __future__ import annotations
 import json
 from langchain_groq import ChatGroq

@@ -1,10 +1,3 @@
-"""
-nodes/parse_node.py — Node 1 (runs twice in parallel branches).
-
-Reads both PDFs and stores raw text in the state.
-LangGraph runs parse_resume and parse_jd as separate nodes so
-LangSmith traces them independently.
-"""
 from __future__ import annotations
 from state import ResumeJDState
 from utils.pdf_parser import extract_text_from_pdf

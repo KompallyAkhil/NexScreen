@@ -1,17 +1,3 @@
-"""
-nodes/score_node.py — Node 6 (terminal node).
-
-Combines semantic_score, keyword_score, and llm_score using
-configurable weights from config.py, then builds the final
-JSON output object.
-
-Score bands:
-  90–100  → Excellent fit
-  75–89   → Strong fit
-  60–74   → Good fit, some gaps
-  45–59   → Partial fit, significant gaps
-  0–44    → Poor fit
-"""
 from __future__ import annotations
 import config
 from state import ResumeJDState

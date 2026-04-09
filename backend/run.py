@@ -1,13 +1,3 @@
-"""
-run.py — FastAPI server + CLI entry point.
-
-Usage (API):
-    uvicorn run:app --reload
-    POST /score  with form-data: resume=<file>, jd=<file>
-
-Usage (CLI):
-    python run.py --resume path/to/resume.pdf --jd path/to/jd.pdf
-"""
 from __future__ import annotations
 import argparse
 import json
@@ -77,8 +67,6 @@ async def score_resume(
 def health():
     return {"status": "ok"}
 
-
-# ── CLI (unchanged) ────────────────────────────────────────────────────────────
 
 def _validate_path(p: str, label: str) -> str:
     path = Path(p)

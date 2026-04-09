@@ -1,12 +1,3 @@
-"""
-nodes/semantic_score_node.py — Node 4.
-
-Computes cosine similarity between resume and JD embeddings.
-Both embeddings are already L2-normalised (normalize_embeddings=True
-in embed_node), so cosine similarity = dot product.
-
-Score is mapped from [-1, 1] → [0, 100].
-"""
 from __future__ import annotations
 import numpy as np
 from state import ResumeJDState

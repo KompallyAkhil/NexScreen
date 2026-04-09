@@ -1,13 +1,3 @@
-"""
-nodes/embed_node.py — Node 3 (runs twice in parallel branches).
-
-Embeds the full resume text and JD text using a local SentenceTransformer
-model. The embeddings are used downstream for cosine similarity scoring.
-
-Why embed the full text (not just skills)?
-  Skill lists miss context. Embedding full text captures experience
-  descriptions, project summaries, and domain vocabulary that enrich matching.
-"""
 from __future__ import annotations
 from sentence_transformers import SentenceTransformer
 import config

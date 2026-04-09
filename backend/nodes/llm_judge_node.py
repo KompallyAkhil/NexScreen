@@ -1,17 +1,4 @@
-"""
-nodes/llm_judge_node.py — Node 5.
 
-Sends both the structured resume fields and JD fields to Groq and
-asks it to act as a hiring manager scoring the fit.
-
-The LLM judge catches nuance that embeddings miss:
-  - Seniority mismatch (overqualified / underqualified)
-  - Domain fit (e.g. candidate did ML in finance, JD wants ML in healthcare)
-  - Quality of experience vs. raw years
-  - Soft skill alignment
-
-Returns a score 0–100 and a structured reasoning object.
-"""
 from __future__ import annotations
 import json
 from langchain_groq import ChatGroq
