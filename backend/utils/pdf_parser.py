@@ -1,7 +1,3 @@
-"""
-utils/pdf_parser.py — extract clean text from PDF files using PyMuPDF.
-Falls back to page-by-page extraction if the full-doc method fails.
-"""
 from __future__ import annotations
 import fitz  # PyMuPDF
 

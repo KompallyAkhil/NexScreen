@@ -1,12 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, FileCode, Sun, Moon } from "lucide-react";
+import { Sparkles, FileCode, Sun, Moon,Star } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "@/components/ThemeProvider";
+import axios from "axios"
+import { useEffect, useState } from "react";
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const [ stars , setStars ] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchStarts = async () => {
+      try {
+        const response = await axios.get("https://api.github.com/repos/KompallyAkhil/NexScreen");
+        setStars(response.data.stargazers_count);
+        console.log(response.data.stargazers_count);
+      } catch (error) {
+        console.error("Error fetching stars:", error);
+      }
+    }
+    fetchStarts();
+  }, []);
 
   return (
     <motion.nav
@@ -54,6 +70,20 @@ export function Navbar() {
           >
             <FileCode size={14} />
             Source
+          </Link>
+
+          <Link
+            href="https://github.com/KompallyAkhil/NexScreen"
+            target="_blank"
+            className="hidden md:flex items-center gap-1.5 text-sm font-medium transition-colors duration-200"
+            style={{ color: "var(--muted)" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "var(--foreground)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+          >
+            <Star size={14} />
+            {stars}
           </Link>
 
           {/* Theme toggle */}
