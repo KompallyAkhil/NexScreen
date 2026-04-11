@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { FileUpload } from "@/components/ui/FileUpload";
+import { FileUpload } from "@/features/analysis/components/FileUpload";
 
 interface SetupViewProps {
   resume: File | null;
@@ -89,7 +89,7 @@ export function SetupView({
       <button
         disabled={!resume || !jd || loading}
         onClick={handleAnalyze}
-        className="flex items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex cursor-pointer items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
         style={{ background: "var(--accent)" }}
         onMouseEnter={(e) => {
           if (!e.currentTarget.disabled)
