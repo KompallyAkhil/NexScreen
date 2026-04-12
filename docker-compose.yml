@@ -10,8 +10,8 @@ services:
       - ./backend:/app
     env_file:
       - ./backend/.env
-    # Override command to ensure host is accessible externally
-    command: uvicorn run:app --host 0.0.0.0 --port 8000 --reload
+    # Run with reload for development
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build:
@@ -28,8 +28,8 @@ services:
       - /app/node_modules
       - /app/.next
     environment:
-      # Use polling to ensure Next.js detects changes inside Docker
       - WATCHPACK_POLLING=true
+      - NEXT_TELEMETRY_DISABLED=1
     command: npm run dev
     depends_on:
       - backend
