@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://nexscreen.vercel.app'), // Replace with your actual production domain
   title: "NexScreen",
   description: "NexScreen - AI-Powered Resume Screening",
   openGraph: {
