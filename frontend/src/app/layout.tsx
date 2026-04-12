@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NexScreen",
     description: "NexScreen - AI-Powered Resume Screening",
-    siteName : "NexScreen",
+    siteName: "NexScreen",
     images: [
       {
         url: "/og-image.png",
