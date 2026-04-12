@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.jpeg",
         width: 1200,
         height: 630,
         alt: "NexScreen - AI-Powered Resume Screening Dashboard Preview",
@@ -35,8 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NexScreen | AI-Powered Resume Screening",
     description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
-    images: ["/og-image.png"],
-    creator: "@KompallyAkhil",
+    images: ["/og-image.jpeg"],
   },
 };
 
