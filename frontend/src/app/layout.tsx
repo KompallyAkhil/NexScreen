@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://nexscreen.vercel.app"),
   title: "NexScreen",
   description: "NexScreen - AI-Powered Resume Screening",
   openGraph: {
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
     images: [
       {
-        url: "/og-image.jpeg",
+        url: "https://nexscreen.vercel.app/og-image.jpeg",
         width: 1200,
         height: 630,
         alt: "NexScreen - AI-Powered Resume Screening Dashboard Preview",
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NexScreen | AI-Powered Resume Screening",
     description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
-    images: ["/og-image.jpeg"],
+    images: ["https://nexscreen.vercel.app/og-image.jpeg"],
   },
 };
 
