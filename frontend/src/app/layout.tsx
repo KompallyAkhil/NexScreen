@@ -20,15 +20,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NexScreen | AI-Powered Resume Screening",
     siteName: "NexScreen",
-    description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
-    images: [
+    description:
+      "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
+    images:[
       {
-        url: "https://nexscreen.vercel.app/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "NexScreen - AI-Powered Resume Screening Dashboard Preview",
-        type: "image/png",
-      },
+        url : "/og-image.png",
+        width : 1200,
+        height : 630,
+        alt : "NexScreen | AI-Powered Resume Screening"
+      }
     ],
     locale: "en_US",
     type: "website",
@@ -36,8 +36,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "NexScreen | AI-Powered Resume Screening",
-    description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
-    images: ["https://nexscreen.vercel.app/og-image.png"],
+    description:
+      "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
+      images : ["/og-image.png"]
   },
 };
 
