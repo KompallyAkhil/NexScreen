@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: "NexScreen - AI-Powered Resume Screening",
   openGraph: {
     title: "NexScreen | AI-Powered Resume Screening",
-    siteName : "NexScreen",
+    siteName: "NexScreen",
     description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
     images: [
       {
