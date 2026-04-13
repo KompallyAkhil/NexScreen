@@ -23,10 +23,11 @@ export const metadata: Metadata = {
     description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
     images: [
       {
-        url: "https://nexscreen.vercel.app/og-image.jpeg",
+        url: "https://nexscreen.vercel.app/og-image.png",
         width: 1200,
         height: 630,
         alt: "NexScreen - AI-Powered Resume Screening Dashboard Preview",
+        type: "image/png",
       },
     ],
     locale: "en_US",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NexScreen | AI-Powered Resume Screening",
     description: "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
-    images: ["https://nexscreen.vercel.app/og-image.jpeg"],
+    images: ["https://nexscreen.vercel.app/og-image.png"],
   },
 };
 
