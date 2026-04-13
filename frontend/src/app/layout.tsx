@@ -22,13 +22,13 @@ export const metadata: Metadata = {
     siteName: "NexScreen",
     description:
       "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
-    images:[
+    images: [
       {
-        url : "/og-image.png",
-        width : 1200,
-        height : 630,
-        alt : "NexScreen | AI-Powered Resume Screening"
-      }
+        url: "https://nexscreen.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "NexScreen | AI-Powered Resume Screening",
+      },
     ],
     locale: "en_US",
     type: "website",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "NexScreen | AI-Powered Resume Screening",
     description:
       "Screen resumes at scale with AI. Get semantic matching scores and technical gap analysis in seconds.",
-      images : ["/og-image.png"]
+    images: ["https://nexscreen.vercel.app/og-image.png"],
   },
 };
 
