@@ -16,7 +16,7 @@ Traces every step automatically in **LangSmith**.
 Two parallel branches process the resume and JD independently,  
 then converge at the semantic matching node.
 
-**Score = 45% semantic similarity + 35% LLM judge + 20% keyword overlap**  
+**Score = 60% semantic similarity + 40% LLM judge**  
 (Weights configurable in `.env`)
 
 ---
@@ -141,9 +141,8 @@ resume_jd_scorer/
 Edit `.env` to adjust weights (must sum to 1.0):
 
 ```env
-SEMANTIC_WEIGHT=0.45
-LLM_WEIGHT=0.35
-KEYWORD_WEIGHT=0.20
+SEMANTIC_WEIGHT=0.60
+LLM_WEIGHT=0.40
 ```
 
 Change the Groq model:
