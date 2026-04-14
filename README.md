@@ -63,10 +63,10 @@ LangSmith is optional but **highly recommended** — it traces every node so you
 
 ```bash
 # Basic run
-python run.py --resume path/to/resume.pdf --jd path/to/jd.pdf
+python app.py --resume path/to/resume.pdf --jd path/to/jd.pdf
 
 # Save output to JSON
-python run.py --resume resume.pdf --jd jd.pdf --output result.json
+python app.py --resume resume.pdf --jd jd.pdf --output result.json
 ```
 
 ### Example output
