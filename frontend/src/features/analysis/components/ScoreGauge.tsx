@@ -64,10 +64,10 @@ export function ScoreGauge({ score, band }: { score: number; band: string }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-5xl font-bold"
+            className="text-4xl font-bold"
             style={{ color: strokeColor }}
           >
-            {Math.round(score)}
+            {score}
           </motion.span>
           <span className="text-xs font-medium mt-1" style={{ color: "var(--muted)" }}>
             Match Score

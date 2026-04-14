@@ -1,7 +1,7 @@
 from __future__ import annotations
 import numpy as np
 from state import ResumeJDState
-from utils.keyword_scorer import keyword_overlap_score, matched_and_missing
+from utils.llm_skill_mapper import map_skills_with_llm
 
 
 def compute_semantic_score(state: ResumeJDState) -> ResumeJDState:
@@ -15,21 +15,16 @@ def compute_semantic_score(state: ResumeJDState) -> ResumeJDState:
     cosine = float(np.dot(r_vec, j_vec))          # already normalised
     semantic_score = round((cosine + 1) / 2 * 100, 2)   # map to 0–100
 
-    # ── Keyword overlap ───────────────────────────────────────────────────────
-    keyword_score = keyword_overlap_score(
-        state["resume_text"], state["jd_text"]
-    )
-
     # ── Skill gap analysis ────────────────────────────────────────────────────
     resume_skills = state.get("resume_fields", {}).get("skills", [])
     jd_required   = state.get("jd_fields", {}).get("required_skills", [])
     jd_preferred  = state.get("jd_fields", {}).get("preferred_skills", [])
 
-    matched, missing = matched_and_missing(resume_skills, jd_required, jd_preferred)
+    all_jd_skills = jd_required + jd_preferred
+    matched, missing = map_skills_with_llm(resume_skills, all_jd_skills)
 
     return {
         "semantic_score": semantic_score,
-        "keyword_score": keyword_score,
         "matched_skills": matched,
         "missing_skills": missing,
     }

@@ -21,8 +21,7 @@ GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
 EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "all-mpnet-base-v2")
 
-SEMANTIC_WEIGHT: float = _float("SEMANTIC_WEIGHT", 0.45)
-LLM_WEIGHT: float = _float("LLM_WEIGHT", 0.35)
-KEYWORD_WEIGHT: float = _float("KEYWORD_WEIGHT", 0.20)
+SEMANTIC_WEIGHT: float = _float("SEMANTIC_WEIGHT", 0.50)
+LLM_WEIGHT: float = _float("LLM_WEIGHT", 0.50)
 
 LANGSMITH_TRACING: bool = os.getenv("LANGCHAIN_TRACING_V2", "false").lower() == "true"

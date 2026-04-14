@@ -24,13 +24,11 @@ def aggregate_score(state: ResumeJDState) -> ResumeJDState:
 
     w_s = config.SEMANTIC_WEIGHT
     w_l = config.LLM_WEIGHT
-    w_k = config.KEYWORD_WEIGHT
 
     semantic = state.get("semantic_score", 0.0)
     llm      = state.get("llm_score", 0.0)
-    keyword  = state.get("keyword_score", 0.0)
 
-    final = round(w_s * semantic + w_l * llm + w_k * keyword, 2)
+    final = round(w_s * semantic + w_l * llm, 2)
 
     # ── Experience gap flag ───────────────────────────────────────────────────
     candidate_exp = state.get("resume_fields", {}).get("experience_years", 0)
@@ -50,11 +48,6 @@ def aggregate_score(state: ResumeJDState) -> ResumeJDState:
                 "score":  llm,
                 "weight": w_l,
                 "contribution": round(w_l * llm, 2),
-            },
-            "keyword_overlap": {
-                "score":  keyword,
-                "weight": w_k,
-                "contribution": round(w_k * keyword, 2),
             },
         },
         "candidate": {
@@ -82,7 +75,7 @@ def aggregate_score(state: ResumeJDState) -> ResumeJDState:
             "concerns":    state.get("_llm_concerns", []),
         },
         "suggestions": state.get("suggestions", []),
-        "weights_used": {"semantic": w_s, "llm": w_l, "keyword": w_k},
+        "weights_used": {"semantic": w_s, "llm": w_l},
     }
 
     return {

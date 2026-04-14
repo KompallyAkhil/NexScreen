@@ -17,7 +17,6 @@ class ResumeJDState(TypedDict, total=False):
     jd_embedding: list[float]
 
     semantic_score: float         # cosine similarity 0–100
-    keyword_score: float          # token overlap 0–100
     llm_score: float              # LLM judge 0–100
     llm_reasoning: str            # LLM explanation
 
