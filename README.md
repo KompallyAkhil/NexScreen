@@ -1,3 +1,6 @@
+
+
+
 # Resume ↔ JD Scorer
 
 A production-quality resume scoring pipeline built with **LangGraph**, **LangChain**, and **Groq (Llama)**.  
@@ -12,6 +15,7 @@ Traces every step automatically in **LangSmith**.
                                                         ├──► semantic match ──► LLM judge ──► score
 [PDF JD]     ──► parse ──► extract fields ──► embed ──┘
 ```
+https://github.com/user-attachments/assets/73ccc804-0635-4bc7-9c17-b93e4672e7f2
 
 Two parallel branches process the resume and JD independently,  
 then converge at the semantic matching node.
