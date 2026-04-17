@@ -73,7 +73,7 @@ def llm_judge(state: ResumeJDState) -> ResumeJDState:
     llm = ChatGroq(
         model=config.GROQ_MODEL,
         api_key=config.GROQ_API_KEY,
-        temperature=0.1,
+        temperature=0.5,
     )
     chain = _JUDGE_PROMPT | llm | StrOutputParser()
 

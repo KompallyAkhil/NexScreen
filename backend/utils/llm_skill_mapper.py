@@ -43,7 +43,7 @@ def map_skills_with_llm(resume_skills: list[str], jd_skills: list[str]) -> tuple
     llm = ChatGroq(
         model=config.GROQ_MODEL,
         api_key=config.GROQ_API_KEY,
-        temperature=0.7,
+        temperature=0.5,
     )
     chain = _MAPPER_PROMPT | llm | StrOutputParser()
     
