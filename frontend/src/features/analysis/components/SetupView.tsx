@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, FlaskConical } from "lucide-react";
 import { FileUpload } from "@/features/analysis/components/FileUpload";
 
 interface SetupViewProps {
@@ -23,6 +24,40 @@ export function SetupView({
   error,
   handleAnalyze,
 }: SetupViewProps) {
+  const [sampleResume, setSampleResume] = useState<File | null>(null);
+  const [sampleJd, setSampleJd] = useState<File | null>(null);
+  const [loadingSample, setLoadingSample] = useState(false);
+  const [sampleLoaded, setSampleLoaded] = useState(false);
+
+  const loadSampleFiles = async () => {
+    setLoadingSample(true);
+    try {
+      const [resumeRes, jdRes] = await Promise.all([
+        fetch("/TCS_AkhilKompally.pdf"),
+        fetch("/SoftwareDeveloperJD.pdf"),
+      ]);
+      const [resumeBlob, jdBlob] = await Promise.all([
+        resumeRes.blob(),
+        jdRes.blob(),
+      ]);
+      const resumeFile = new File([resumeBlob], "TCS_AkhilKompally.pdf", {
+        type: "application/pdf",
+      });
+      const jdFile = new File([jdBlob], "SoftwareDeveloperJD.pdf", {
+        type: "application/pdf",
+      });
+      setSampleResume(resumeFile);
+      setSampleJd(jdFile);
+      setResume(resumeFile);
+      setJd(jdFile);
+      setSampleLoaded(true);
+    } catch {
+      // silently fail — user can still upload manually
+    } finally {
+      setLoadingSample(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -32,7 +67,7 @@ export function SetupView({
       className="flex flex-col items-center"
     >
       {/* Header */}
-      <div className="text-center mb-12 max-w-2xl">
+      <div className="text-center mb-10 max-w-2xl">
         <div
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6"
           style={{
@@ -65,8 +100,8 @@ export function SetupView({
 
       {/* Upload Cards */}
       <div className="grid md:grid-cols-2 gap-5 w-full max-w-3xl mb-8">
-        <FileUpload label="Resume" onFileSelect={setResume} />
-        <FileUpload label="Job Description" onFileSelect={setJd} />
+        <FileUpload label="Resume" onFileSelect={setResume} defaultFile={sampleResume} />
+        <FileUpload label="Job Description" onFileSelect={setJd} defaultFile={sampleJd} />
       </div>
 
       {/* Error */}
@@ -85,30 +120,74 @@ export function SetupView({
         </motion.div>
       )}
 
-      {/* CTA */}
-      <button
-        disabled={!resume || !jd || loading}
-        onClick={handleAnalyze}
-        className="flex cursor-pointer items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-        style={{ background: "var(--accent)" }}
-        onMouseEnter={(e) => {
-          if (!e.currentTarget.disabled)
-            e.currentTarget.style.opacity = "0.88";
-        }}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-      >
-        {loading ? (
-          <>
-            <Loader2 size={16} className="animate-spin" />
-            Analyzing…
-          </>
-        ) : (
-          <>
-            Run Analysis
-            <ArrowRight size={16} />
-          </>
-        )}
-      </button>
+      {/* CTA row */}
+      <div className="flex items-center gap-3">
+        {/* Try Sample Files */}
+        <button
+          onClick={loadSampleFiles}
+          disabled={loadingSample || sampleLoaded}
+          className="flex cursor-pointer items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{
+            background: "transparent",
+            color: sampleLoaded ? "var(--success)" : "var(--foreground)",
+            border: `1.5px solid ${sampleLoaded ? "#86efac" : "var(--border)"}`,
+          }}
+          onMouseEnter={(e) => {
+            if (!e.currentTarget.disabled) {
+              e.currentTarget.style.borderColor = "var(--accent)";
+              e.currentTarget.style.color = "var(--accent)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!sampleLoaded) {
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.color = "var(--foreground)";
+            }
+          }}
+        >
+          {loadingSample ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Loading…
+            </>
+          ) : sampleLoaded ? (
+            <>
+              <FlaskConical size={16} />
+              Samples Loaded
+            </>
+          ) : (
+            <>
+              <FlaskConical size={16} />
+              Try Sample Files
+            </>
+          )}
+        </button>
+
+        {/* Run Analysis */}
+        <button
+          disabled={!resume || !jd || loading}
+          onClick={handleAnalyze}
+          className="flex cursor-pointer items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ background: "var(--accent)" }}
+          onMouseEnter={(e) => {
+            if (!e.currentTarget.disabled)
+              e.currentTarget.style.opacity = "0.88";
+          }}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+        >
+          {loading ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Analyzing…
+            </>
+          ) : (
+            <>
+              Run Analysis
+              <ArrowRight size={16} />
+            </>
+          )}
+        </button>
+      </div>
 
       {/* Footer note */}
       <p className="mt-5 text-xs" style={{ color: "var(--muted-light)" }}>

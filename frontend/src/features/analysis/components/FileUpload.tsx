@@ -14,12 +14,14 @@ interface FileUploadProps {
   label: string;
   onFileSelect: (file: File | null) => void;
   accept?: string;
+  defaultFile?: File | null;
 }
 
 export function FileUpload({
   label,
   onFileSelect,
   accept = ".pdf",
+  defaultFile,
 }: FileUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -32,6 +34,15 @@ export function FileUpload({
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
+
+  // Sync when parent injects a default file (e.g. sample files)
+  useEffect(() => {
+    if (defaultFile && defaultFile !== file) {
+      setFile(defaultFile);
+      onFileSelect(defaultFile);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultFile]);
 
   const handleFile = (f: File) => {
     if (f && f.type === "application/pdf") {
