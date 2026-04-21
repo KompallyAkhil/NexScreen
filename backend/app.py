@@ -31,22 +31,29 @@ console = Console()
 @app.post("/score")
 async def score_resume(
     resume: UploadFile = File(..., description="Resume PDF"),
-    jd:     UploadFile = File(..., description="Job Description PDF"),
+    jd:     UploadFile = File(..., description="Job Description PDF or plain text"),
 ):
-    # Validate file types
-    for f, label in [(resume, "resume"), (jd, "job description")]:
-        if not f.filename.lower().endswith(".pdf"):
-            raise HTTPException(
-                status_code=400,
-                detail=f"Expected a PDF for {label}, got: {f.filename}"
-            )
+    if not resume.filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Expected a PDF for resume, got: {resume.filename}"
+        )
 
-    # Save uploads to temp files and run pipeline
+    jd_ext = Path(jd.filename).suffix.lower() if jd.filename else ""
+    if jd_ext not in (".pdf", ".txt", ""):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Expected a PDF or plain-text file for job description, got: {jd.filename}"
+        )
+        
+    jd_is_text = jd_ext != ".pdf"
+
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp = Path(tmpdir)
 
         resume_path = tmp / "resume.pdf"
-        jd_path     = tmp / "jd.pdf"
+        jd_suffix   = ".txt" if jd_is_text else ".pdf"
+        jd_path     = tmp / f"jd{jd_suffix}"
 
         resume_path.write_bytes(await resume.read())
         jd_path.write_bytes(await jd.read())

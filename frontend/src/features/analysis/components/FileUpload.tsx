@@ -59,12 +59,14 @@ export function FileUpload({
 
   return (
     <div className="w-full">
-      <p
-        className="text-xs font-semibold uppercase tracking-wider mb-2"
-        style={{ color: "var(--muted)" }}
-      >
-        {label}
-      </p>
+      <div className="flex items-center h-8 mb-2">
+        <p
+          className="text-xs font-semibold uppercase tracking-wider"
+          style={{ color: "var(--muted)" }}
+        >
+          {label}
+        </p>
+      </div>
       <div
         onClick={() => {
           if (!file) inputRef.current?.click();

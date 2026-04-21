@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2, FlaskConical } from "lucide-react";
 import { FileUpload } from "@/features/analysis/components/FileUpload";
+import { JdInput } from "@/features/analysis/components/JdInput";
 
 interface SetupViewProps {
   resume: File | null;
@@ -101,7 +102,7 @@ export function SetupView({
       {/* Upload Cards */}
       <div className="grid md:grid-cols-2 gap-5 w-full max-w-3xl mb-8">
         <FileUpload label="Resume" onFileSelect={setResume} defaultFile={sampleResume} />
-        <FileUpload label="Job Description" onFileSelect={setJd} defaultFile={sampleJd} />
+        <JdInput label="Job Description" onFileSelect={setJd} defaultFile={sampleJd} />
       </div>
 
       {/* Error */}
@@ -191,7 +192,7 @@ export function SetupView({
 
       {/* Footer note */}
       <p className="mt-5 text-xs" style={{ color: "var(--muted-light)" }}>
-        PDF files only · Max 10 MB each
+        Resume: PDF only · JD: PDF or plain text · Max 10 MB each
       </p>
     </motion.div>
   );
