@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2, FlaskConical } from "lucide-react";
 import { FileUpload } from "@/features/analysis/components/FileUpload";
@@ -29,6 +29,14 @@ export function SetupView({
   const [sampleJd, setSampleJd] = useState<File | null>(null);
   const [loadingSample, setLoadingSample] = useState(false);
   const [sampleLoaded, setSampleLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!resume && !jd && sampleLoaded) {
+      setSampleLoaded(false);
+      setSampleResume(null);
+      setSampleJd(null);
+    }
+  }, [resume, jd, sampleLoaded]);
 
   const loadSampleFiles = async () => {
     setLoadingSample(true);

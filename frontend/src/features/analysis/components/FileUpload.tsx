@@ -25,6 +25,7 @@ export function FileUpload({
 }: FileUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showPreview, setShowPreview] = useState(false);
   const previewUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
@@ -35,19 +36,20 @@ export function FileUpload({
     };
   }, [previewUrl]);
 
-  // Sync when parent injects a default file (e.g. sample files)
   useEffect(() => {
     if (defaultFile && defaultFile !== file) {
       setFile(defaultFile);
       onFileSelect(defaultFile);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultFile]);
 
   const handleFile = (f: File) => {
     if (f && f.type === "application/pdf") {
       setFile(f);
+      setFileError(null);
       onFileSelect(f);
+    } else if (f) {
+      setFileError(`"${f.name}" is not a PDF. Please upload a PDF file.`);
     }
   };
 
@@ -130,6 +132,7 @@ export function FileUpload({
                   onClick={(e) => {
                     e.stopPropagation();
                     setFile(null);
+                    setFileError(null);
                     onFileSelect(null);
                   }}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
@@ -235,6 +238,14 @@ export function FileUpload({
           </div>
         </DialogContent>
       </Dialog>
+      {fileError && (
+        <p
+          className="mt-2 text-xs font-medium"
+          style={{ color: "var(--danger)" }}
+        >
+          {fileError}
+        </p>
+      )}
     </div>
   );
 }
