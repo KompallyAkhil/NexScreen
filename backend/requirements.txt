@@ -13,3 +13,4 @@ rich
 pydantic-settings
 requests
 httpx
+PyJWT[crypto]

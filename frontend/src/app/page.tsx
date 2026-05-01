@@ -18,6 +18,7 @@ export default function Home() {
     error,
     handleAnalyze,
     reset,
+    isSignedIn,
   } = useAnalysis();
 
   return (
@@ -39,6 +40,7 @@ export default function Home() {
               loading={loading}
               error={error}
               handleAnalyze={handleAnalyze}
+              isSignedIn={isSignedIn}
             />
           ) : (
             <ResultsView key="results" results={results} reset={reset} />

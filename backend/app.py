@@ -3,6 +3,7 @@ import argparse
 import json
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 from rich.console import Console
@@ -11,9 +12,19 @@ from rich.table import Table
 from rich import box
 
 from pipeline import pipeline
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Security, Depends
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import jwt
+import httpx
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+CLERK_JWKS_URL = os.getenv("CLERK_JWKS_URL", "")
+
 app = FastAPI(title="Resume Scorer API")
 
 app.add_middleware(
@@ -25,6 +36,55 @@ app.add_middleware(
 )
 console = Console()
 
+# ── Clerk JWT verification ────────────────────────────────────────────────────
+
+_bearer = HTTPBearer()
+
+# Simple in-memory JWKS cache (refreshed every 5 minutes)
+_jwks_cache: dict = {"keys": [], "fetched_at": 0.0}
+
+
+def _get_jwks() -> list:
+    """Return cached JWKS keys, refreshing if older than 5 minutes."""
+    if time.time() - _jwks_cache["fetched_at"] > 300:
+        resp = httpx.get(CLERK_JWKS_URL, timeout=5)
+        resp.raise_for_status()
+        _jwks_cache["keys"] = resp.json().get("keys", [])
+        _jwks_cache["fetched_at"] = time.time()
+    return _jwks_cache["keys"]
+
+
+def verify_clerk_token(
+    credentials: HTTPAuthorizationCredentials = Security(_bearer),
+) -> dict:
+    """FastAPI dependency — decodes and validates a Clerk JWT.
+    Raises HTTP 401 if the token is missing, expired, or has a bad signature.
+    """
+    token = credentials.credentials
+    try:
+        header = jwt.get_unverified_header(token)
+        kid = header.get("kid")
+
+        keys = _get_jwks()
+        matching = [k for k in keys if k.get("kid") == kid]
+        if not matching:
+            raise HTTPException(status_code=401, detail="Unknown signing key.")
+
+        public_key = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(matching[0]))
+        payload = jwt.decode(
+            token,
+            public_key,
+            algorithms=["RS256"],
+            options={"verify_exp": True},
+        )
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired.")
+    except jwt.InvalidTokenError as e:
+        raise HTTPException(status_code=401, detail=f"Invalid token: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Auth error: {e}")
+
 
 # ── FastAPI Routes ─────────────────────────────────────────────────────────────
 
@@ -32,6 +92,7 @@ console = Console()
 async def score_resume(
     resume: UploadFile = File(..., description="Resume PDF"),
     jd:     UploadFile = File(..., description="Job Description PDF or plain text"),
+    _user: dict = Depends(verify_clerk_token),
 ):
     if not resume.filename.lower().endswith(".pdf"):
         raise HTTPException(

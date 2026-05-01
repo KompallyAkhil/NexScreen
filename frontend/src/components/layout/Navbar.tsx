@@ -1,26 +1,31 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, FileCode, Sun, Moon,Star } from "lucide-react";
+import { Sparkles, FileCode, Sun, Moon, Star } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "@/components/ThemeProvider";
-import axios from "axios"
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
-  const [ stars , setStars ] = useState<number | null>(null);
+  const { isSignedIn } = useAuth();
+  const [stars, setStars] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchStarts = async () => {
       try {
-        const response = await axios.get("https://api.github.com/repos/KompallyAkhil/NexScreen");
+        const response = await axios.get(
+          "https://api.github.com/repos/KompallyAkhil/NexScreen",
+        );
         setStars(response.data.stargazers_count);
         console.log(response.data.stargazers_count);
       } catch (error) {
         console.error("Error fetching stars:", error);
       }
-    }
+    };
     fetchStarts();
   }, []);
 
@@ -116,15 +121,47 @@ export function Navbar() {
             </motion.div>
           </button>
 
-          {/* CTA */}
-          <button
-            className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 active:scale-95"
-            style={{ background: "var(--accent)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            Get Started
-          </button>
+          {/* Auth buttons */}
+          {!isSignedIn ? (
+            <>
+              <SignInButton mode="modal" appearance={{ baseTheme: dark }}>
+                <button
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-95"
+                  style={{
+                    background: "var(--surface-raised)",
+                    border: "1px solid var(--border)",
+                    color: "var(--foreground)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--muted-light)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--border)";
+                  }}
+                >
+                  Sign In
+                </button>
+              </SignInButton>
+
+              <SignUpButton mode="modal" appearance={{ baseTheme: dark }}>
+                <button
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 active:scale-95"
+                  style={{ background: "var(--accent)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                >
+                  Get Started
+                </button>
+              </SignUpButton>
+            </>
+          ) : (
+            <UserButton
+              appearance={{
+                baseTheme: dark,
+                elements: { avatarBox: "w-9 h-9" },
+              }}
+            />
+          )}
         </div>
       </div>
     </motion.nav>

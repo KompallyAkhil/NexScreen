@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2, FlaskConical } from "lucide-react";
+import { ArrowRight, Loader2, FlaskConical, LogIn } from "lucide-react";
 import { FileUpload } from "@/features/analysis/components/FileUpload";
 import { JdInput } from "@/features/analysis/components/JdInput";
+import { SignInButton } from "@clerk/nextjs";
 
 interface SetupViewProps {
   resume: File | null;
@@ -14,6 +15,7 @@ interface SetupViewProps {
   loading: boolean;
   error: string | null;
   handleAnalyze: () => void;
+  isSignedIn: boolean | undefined;
 }
 
 export function SetupView({
@@ -24,6 +26,7 @@ export function SetupView({
   loading,
   error,
   handleAnalyze,
+  isSignedIn,
 }: SetupViewProps) {
   const [sampleResume, setSampleResume] = useState<File | null>(null);
   const [sampleJd, setSampleJd] = useState<File | null>(null);
@@ -173,29 +176,43 @@ export function SetupView({
         </button>
 
         {/* Run Analysis */}
-        <button
-          disabled={!resume || !jd || loading}
-          onClick={handleAnalyze}
-          className="flex cursor-pointer items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ background: "var(--accent)" }}
-          onMouseEnter={(e) => {
-            if (!e.currentTarget.disabled)
-              e.currentTarget.style.opacity = "0.88";
-          }}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-        >
-          {loading ? (
-            <>
-              <Loader2 size={16} className="animate-spin" />
-              Analyzing…
-            </>
-          ) : (
-            <>
-              Run Analysis
-              <ArrowRight size={16} />
-            </>
-          )}
-        </button>
+        {!isSignedIn ? (
+          <SignInButton mode="modal">
+            <button
+              className="flex cursor-pointer items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98]"
+              style={{ background: "var(--accent)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              <LogIn size={16} />
+              Sign In to Analyze
+            </button>
+          </SignInButton>
+        ) : (
+          <button
+            disabled={!resume || !jd || loading}
+            onClick={handleAnalyze}
+            className="flex cursor-pointer items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ background: "var(--accent)" }}
+            onMouseEnter={(e) => {
+              if (!e.currentTarget.disabled)
+                e.currentTarget.style.opacity = "0.88";
+            }}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          >
+            {loading ? (
+              <>
+                <Loader2 size={16} className="animate-spin" />
+                Analyzing…
+              </>
+            ) : (
+              <>
+                Run Analysis
+                <ArrowRight size={16} />
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Footer note */}
