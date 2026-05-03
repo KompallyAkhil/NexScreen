@@ -6,6 +6,7 @@ import { ArrowRight, Loader2, FlaskConical, LogIn } from "lucide-react";
 import { FileUpload } from "@/features/analysis/components/FileUpload";
 import { JdInput } from "@/features/analysis/components/JdInput";
 import { SignInButton } from "@clerk/nextjs";
+import { HeroVideoDialog } from "@/components/ui/hero-video-dialog";
 
 interface SetupViewProps {
   resume: File | null;
@@ -112,8 +113,16 @@ export function SetupView({
 
       {/* Upload Cards */}
       <div className="grid md:grid-cols-2 gap-5 w-full max-w-3xl mb-8">
-        <FileUpload label="Resume" onFileSelect={setResume} defaultFile={sampleResume} />
-        <JdInput label="Job Description" onFileSelect={setJd} defaultFile={sampleJd} />
+        <FileUpload
+          label="Resume"
+          onFileSelect={setResume}
+          defaultFile={sampleResume}
+        />
+        <JdInput
+          label="Job Description"
+          onFileSelect={setJd}
+          defaultFile={sampleJd}
+        />
       </div>
 
       {/* Error */}
@@ -213,6 +222,14 @@ export function SetupView({
             )}
           </button>
         )}
+        <HeroVideoDialog animationStyle="from-center" videoSrc="/NexScreen.mp4">
+          <button
+            className="flex cursor-pointer items-center justify-center gap-2.5 h-12 px-8 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ background: "var(--accent)" }}
+          >
+            View Demo
+          </button>
+        </HeroVideoDialog>
       </div>
 
       {/* Footer note */}
