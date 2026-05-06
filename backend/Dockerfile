@@ -1,4 +1,3 @@
-
 # FROM python:3.11-slim
 
 # # Set working directory
@@ -25,22 +24,23 @@
 # # Default command for development (overridden by docker-compose if needed)
 # CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 # Uncomment out the above lines and comment below lines to build the docker file to run on your local and  below uncommented lines is done for deployment in this case I have choosen railway as my deployment platform
-# ── Render (free tier) production Dockerfile ──────────────────────────────────
-# Render injects $PORT at runtime. Falls back to 8000 for local docker-compose.
+# ── Production Dockerfile (Render / Fly.io / Koyeb compatible) ────────────────
+# $PORT is injected at runtime by the platform. Falls back to 8000 locally.
 # ──────────────────────────────────────────────────────────────────────────────
 
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install curl (needed for HEALTHCHECK)
+# Install curl (required for HEALTHCHECK)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy and install Python dependencies first (leverages Docker layer cache)
+# Copy requirements first — Docker layer cache: only reinstalls when file changes
 COPY requirements.txt .
 
+# Install CPU-only torch (much smaller) + all other deps
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir --prefer-binary \
         torch --index-url https://download.pytorch.org/whl/cpu && \
@@ -49,12 +49,12 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application source
 COPY . .
 
-# Tell Render / Docker which port the app listens on
+# Declare the default port
 EXPOSE 8000
 
-# Render health-check — hits /health every 30 s after a 60 s warm-up window
+# Platform health-check — hits /health every 30s after a 60s warm-up window
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-# No --reload in production; uses $PORT injected by Render (default 8000 locally)
+# No --reload in production; uses $PORT injected by platform (default 8000 locally)
 CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"]
